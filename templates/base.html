@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+	<head>
+		<title>{{ the_title }}</title><!-- 这里的the_title是模板的一个参数 -->
+		<link rel="stylesheet" href="static/hf.css"><!-- 这个hf.css定义了所有web页面的外观 -->
+	</head>
+	<body>
+		{% block body %}
+		<!-- 这个文件是一个模板，意思就是所有其他网页都按这个代码写 -->
+		<!-- 在其他的网页文件中，这些代码不用再写一次，只要写这里两个body之间的代码就可以了 -->
+		<!-- 这一部分称为命名块 -->
+		{% endblock %}
+	</body>
+</html>

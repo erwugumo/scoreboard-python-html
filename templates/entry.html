@@ -1,0 +1,20 @@
+{% extends 'base.html' %}<!-- 这说明这个网页继承了base基模板 -->
+{% block body %}<!-- 这部分开始替代基模板中的命名块 -->
+
+<h2>{{ the_title }}<h2>
+
+<form method='POST' action='/search4'>
+<!--
+<table>
+<p>Use this form to submit a instruction stream:</p>
+<tr><td>Instruction_Stream</td><td><input name='instruction_stream' type='TEXT' width='60'></td></tr>
+</table>
+-->
+<div style="text-align:center;">
+<textarea class="boxes" name="instruction_stream" >Input</textarea>
+</div>
+<p style="text-align:center;color:#00FF00">When you're ready, click this button:</p>
+<p style="text-align:center"><input value='Do it!' type='SUBMIT'></p>
+</form>
+
+{% endblock %}

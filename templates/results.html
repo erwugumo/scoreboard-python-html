@@ -1,0 +1,186 @@
+{% extends 'base.html' %}<!-- 这说明这个网页继承了base基模板 -->
+{% block body %}<!-- 这部分开始替代基模板中的命名块 -->
+
+<h2>{{ the_title }}<h2>
+
+<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+var func;
+var insTable;
+var res;
+var a=1000;
+function callcycle(){
+$.ajax({
+    url:'/cycle',
+    type:'POST',
+	data:JSON.stringify({'username':'js','psw':'123456789'}),
+    dataType: 'json',
+    success:function(res){
+    insTable=res['ins_Table'];
+    func=res['func'];
+	reg=res['reg'];
+	cyclenum=res['Cycle'];
+	//console.log('ins');
+	//console.log(insTable);
+	
+	var tb = document.getElementById('T_ins');    // table 的 id
+	var rows = tb.rows;                           // 获取表格所有行
+	//console.log(rows[0]);
+	//console.log(rows[0][0]);
+	//console.log(rows.length);
+	for(var i = 1; i<rows.length; i++ ){
+		//console.log(i);
+		rows[i].cells["instruction"].innerText=insTable[i-1]["instruction"];
+		rows[i].cells["target"].innerText=insTable[i-1]["target"];
+		rows[i].cells["j"].innerText=insTable[i-1]["j"];
+		rows[i].cells["k"].innerText=insTable[i-1]["k"];
+		rows[i].cells["issue"].innerText=insTable[i-1]["issue"];
+		rows[i].cells["readOperand"].innerText=insTable[i-1]["readOperand"];
+		rows[i].cells["exeComplet"].innerText=insTable[i-1]["exeComplet"];
+		rows[i].cells["writeResult"].innerText=insTable[i-1]["writeResult"];
+		
+	}
+	var tc = document.getElementById('T_fun');    // table 的 id
+	var rowsf = tc.rows;                           // 获取表格所有行
+	for(var i = 1; i<rowsf.length; i++ ){
+		rowsf[i].cells["busy"].innerText=func[i-1]["busy"];
+		rowsf[i].cells["Op"].innerText=func[i-1]["Op"];
+		rowsf[i].cells["Fi"].innerText=func[i-1]["Fi"];
+		rowsf[i].cells["Fj"].innerText=func[i-1]["Fj"];
+		rowsf[i].cells["Fk"].innerText=func[i-1]["Fk"];
+		rowsf[i].cells["Qj"].innerText=func[i-1]["Qj"];
+		rowsf[i].cells["Qk"].innerText=func[i-1]["Qk"];
+		rowsf[i].cells["Rj"].innerText=func[i-1]["Rj"];
+		rowsf[i].cells["Rk"].innerText=func[i-1]["Rk"];
+	}
+	document.getElementById("F0").innerText = reg["F0"];
+	document.getElementById("F1").innerText = reg["F1"];
+	document.getElementById("F2").innerText = reg["F2"];
+	document.getElementById("F3").innerText = reg["F3"];
+	document.getElementById("F4").innerText = reg["F4"];
+	document.getElementById("F5").innerText = reg["F5"];
+	document.getElementById("F6").innerText = reg["F6"];
+	document.getElementById("F7").innerText = reg["F7"];
+	document.getElementById("F8").innerText = reg["F8"];
+	document.getElementById("F9").innerText = reg["F9"];
+	document.getElementById("F10").innerText = reg["F10"];
+	document.getElementById("F11").innerText = reg["F11"];
+	document.getElementById("cyclenum").innerText = cyclenum;
+	//$(".insTable").html(res['ins_Table']);
+	//$(".func").html(res['func']);
+	//$(".reg").html(res['reg']);
+	//console.log(res);
+	},
+    error:function (res) {
+        console.log(0);
+        console.log(1);
+    }
+})}
+var set1=setInterval(callcycle,a);
+function change(){
+    var x=document.getElementById("iptTxt");
+	a=parseInt(x.value);
+	clearInterval(set1);
+	set1=setInterval(callcycle,a);
+   }
+</script>
+
+<p style="text-align:center;color:#00FF00">You submitted the following Instruction Stream:</p>
+<div style="text-align:center;">
+<textarea class="comments" rows=1 cols=27   onpropertychange= "this.style.posHeight=this.scrollHeight " >{{ Instruction_Stream }}</textarea>
+</div>
+<p style="text-align:center;color:#00FF00">Total Cycle:</p>
+<p style="text-align:center;color:#00FF00" id="cyclenum">0</p>
+<p style="text-align:center;color:#00FF00">Current Cycle Length:</p>
+<div style="text-align:center;">
+<input type='text' id='iptTxt' onchange="change()" style="width:120px;">
+</div>
+<p style="text-align:center;color:#00FF00">Instruction Status:</p>
+<table border="1" id="T_ins">
+  <tr>
+    <th>Instruction</th>
+    <th>Target</th>
+    <th>J</th>
+    <th>K</th>
+    <th>Issue</th>
+    <th>Read Operand</th>
+    <th>Execution Complet</th>
+    <th>Write Result</th>
+  </tr>
+  <!--<div class="insTable">{{ insTable }}</div>-->
+    {% for item in insTable %}
+        <tr>
+            <td id="instruction">{{ item["instruction"] }}</td>
+            <td id="target">{{ item["target"] }}</td>
+            <td id="j">{{ item["j"] }}</td>
+            <td id="k">{{ item["k"] }}</td>
+            <td id="issue">{{ item["issue"] }}</td>
+            <td id="readOperand">{{ item["readOperand"] }}</td>
+            <td id="exeComplet">{{ item["exeComplet"] }}</td>
+            <td id="writeResult">{{ item["writeResult"] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<p style="text-align:center;color:#00FF00">Functional Unit Status:</p>
+<table border="1" id="T_fun">
+  <tr>
+    <th>Name</th>
+    <th>Busy</th>
+    <th>Op</th>
+    <th>Fi</th>
+    <th>Fj</th>
+    <th>Fk</th>
+    <th>Qj</th>
+    <th>Qk</th>
+    <th>Rj</th>
+    <th>Rk</th>
+  </tr>
+  <!--<div class="func">{{ func }}</div>-->
+    {% for item in func %}
+        <tr>
+            <td id="name">{{ item["name"] }}</td>
+            <td id="busy">{{ item["busy"] }}</td>
+            <td id="Op">{{ item["Op"] }}</td>
+            <td id="Fi">{{ item["Fi"] }}</td>
+            <td id="Fj">{{ item["Fj"] }}</td>
+            <td id="Fk">{{ item["Fk"] }}</td>
+            <td id="Qj">{{ item["Qj"] }}</td>
+            <td id="Qk">{{ item["Qk"] }}</td>
+            <td id="Rj">{{ item["Rj"] }}</td>
+            <td id="Rk">{{ item["Rk"] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<p style="text-align:center;color:#00FF00">Register Result Status:</p>
+<table border="1">
+  <tr>
+    <th>F0</th>
+    <th>F1</th>
+    <th>F2</th>
+    <th>F3</th>
+    <th>F4</th>
+    <th>F5</th>
+    <th>F6</th>
+    <th>F7</th>
+    <th>F8</th>
+    <th>F9</th>
+    <th>F10</th>
+    <th>F11</th>
+  </tr>
+  <!--<div class="reg">{{ reg }}</div>-->
+  <td id="F0">{{ reg['F0'] }}</td>
+  <td id="F1">{{ reg['F1'] }}</td>
+  <td id="F2">{{ reg['F2'] }}</td>
+  <td id="F3">{{ reg['F3'] }}</td>
+  <td id="F4">{{ reg['F4'] }}</td>
+  <td id="F5">{{ reg['F5'] }}</td>
+  <td id="F6">{{ reg['F6'] }}</td>
+  <td id="F7">{{ reg['F7'] }}</td>
+  <td id="F8">{{ reg['F8'] }}</td>
+  <td id="F9">{{ reg['F9'] }}</td>
+  <td id="F10">{{ reg['F10'] }}</td>
+  <td id="F11">{{ reg['F11'] }}</td>
+</table>
+<!-- 注意the_phrase、the_letters、the_results也是模板的参数，在呈现出来之前也需要给它们提供值-->
+
+{% endblock %}
